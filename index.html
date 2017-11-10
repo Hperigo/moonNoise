@@ -38,6 +38,8 @@
 		<input type="range" min="-1000" max="1000" value="50" class="slider" id="ctrl-noisespeed">
 		<input type="range" min="1" max="10000" value="50" class="slider" id="ctrl-scaleX">
 		<input type="range" min="1" max="10000" value="50" class="slider" id="ctrl-scaleY">
+		<br>
+		<!-- <input type="checkbox" id='ctrl-food'> -->
 	</div>
 
 	<div id='moon-container'></div>
@@ -54,19 +56,25 @@
 
 		var moonContainer = document.getElementById('moon-container');
 		var moon = [0x1F311,0x1F312,0x1F313,0x1F314,0x1F315,0x1F316,0x1F317,0x1F318];
+		// var moon = [0x1F366,0x1F34C,0x1F344,0x1F345,0x1F950,0x1F354, 0x1F35F,0x1F36A,0x1F369]
 
-		var timeSpeed = 0.01;
-		var noiseSpeed = 0.008;
+		var timeSpeed = 0.0172;
+		var noiseSpeed = -0.0307;
 
-		var noiseScaleX = 4000.0;
-		var noiseScaleY = 8000.0;
+		var noiseScaleX = 2150.0;
+		var noiseScaleY = 2150.0;
 		// var moon = ['-','+','=','|','*']
 
 
 
 		var isDirty = true;
 		
-		for(var i = 0; i < 1000; i++){
+		var numberOfMoons =  Math.round((screen.height * screen.width) / (40 * 40) );
+
+		console.log( numberOfMoons );
+
+
+		for(var i = 0; i < numberOfMoons; i++){
 
 			var el = document.createElement( "div" );
 			el.setAttribute( 'class', 'moon' );
@@ -128,7 +136,7 @@
 
 			var elDesc = document.getElementById('desc-moon');
 
-			var i =   Math.round((time ) % (moon.length - 1));
+			var i =   Math.round((time * 20) % (moon.length - 1));
 			// console.log(i)
 			elDesc.innerHTML = String.fromCodePoint( moon[i] );
 
@@ -142,7 +150,7 @@
 		}
 
 			document.getElementById('ctrl-timespeed').oninput = function( value ){
-				// console.log( value.srcElement.valueAsNumber );
+				console.log( value.srcElement.valueAsNumber );
 
 				timeSpeed = value.srcElement.valueAsNumber / 10000.0;
 			}
@@ -150,19 +158,44 @@
 
 			document.getElementById('ctrl-noisespeed').oninput = function( value ){
 
+				console.log( value.srcElement.valueAsNumber );
 				noiseSpeed = value.srcElement.valueAsNumber  / 10000.0;
 			}
 
 			document.getElementById('ctrl-scaleX').oninput = function( value ){
 
+				console.log( value.srcElement.valueAsNumber );
 				noiseScaleX = value.srcElement.valueAsNumber * 1.0;
 			}
 
 			document.getElementById('ctrl-scaleY').oninput = function( value ){
-
+				console.log( value.srcElement.valueAsNumber );
 				noiseScaleY = value.srcElement.valueAsNumber * 1.0;
 			}
+			
 
+/*
+			document.getElementById('ctrl-food').onchange = function( value ){
+
+				console.log( value );
+
+
+				if( value.srcElement.checked ){
+					document.body.style.backgroundColor = '#ffc300'
+					moon = [0x1F366,0x1F34C,0x1F344,0x1F345,0x1F950,0x1F354, 0x1F35F,0x1F36A,0x1F369]
+				}else{
+
+					console.log( value );
+					document.body.style.backgroundColor = '#ca4e4e'
+					moon = [0x1F311,0x1F312,0x1F313,0x1F314,0x1F315,0x1F316,0x1F317,0x1F318];
+
+
+				}
+				
+				
+			}
+
+			*/
 			window.onresize = function(){
 				isDirty = true;
 			}

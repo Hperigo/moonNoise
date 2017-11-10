@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Page Title</title>
+<title>moon noise</title>
 
 	<style>
 	
@@ -36,6 +36,8 @@
 		<p>made with <span id='desc-moon'></span> by <a href='http://hperigo.com.br/' target="blank"> hperigo </a> </p>
 		<input type="range" min="1" max="1000" value="50" class="slider" id="ctrl-timespeed">
 		<input type="range" min="-1000" max="1000" value="50" class="slider" id="ctrl-noisespeed">
+		<input type="range" min="1" max="10000" value="50" class="slider" id="ctrl-scaleX">
+		<input type="range" min="1" max="10000" value="50" class="slider" id="ctrl-scaleY">
 	</div>
 
 	<div id='moon-container'></div>
@@ -55,6 +57,9 @@
 
 		var timeSpeed = 0.01;
 		var noiseSpeed = 0.008;
+
+		var noiseScaleX = 4000.0;
+		var noiseScaleY = 8000.0;
 		// var moon = ['-','+','=','|','*']
 
 
@@ -104,7 +109,7 @@
 				var x =  el.getAttribute('x')
 				var y = el.getAttribute('y')
 
-				var mNoise = noise.simplex3(x / 4000.0, y / 8000.0, noiseTime);
+				var mNoise = noise.simplex3(x / noiseScaleX, y / noiseScaleY, noiseTime);
 
 				var newIndex =  Math.round( (mNoise + time )  * 0.5 * moon.length ) % moon.length; // Math.round( index + ( x + y ) * 1.0 ) ;
 
@@ -127,7 +132,8 @@
 			// console.log(i)
 			elDesc.innerHTML = String.fromCodePoint( moon[i] );
 
-			
+			document.title =  String.fromCodePoint( moon[i] ) +  " moon noise ";
+
 			isDirty = false;
 
 			time += timeSpeed;
@@ -143,8 +149,18 @@
 
 
 			document.getElementById('ctrl-noisespeed').oninput = function( value ){
-				// console.log( value.srcElement.valueAsNumber );
+
 				noiseSpeed = value.srcElement.valueAsNumber  / 10000.0;
+			}
+
+			document.getElementById('ctrl-scaleX').oninput = function( value ){
+
+				noiseScaleX = value.srcElement.valueAsNumber * 1.0;
+			}
+
+			document.getElementById('ctrl-scaleY').oninput = function( value ){
+
+				noiseScaleY = value.srcElement.valueAsNumber * 1.0;
 			}
 
 			window.onresize = function(){

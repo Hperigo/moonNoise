@@ -53,7 +53,7 @@
 		var moonContainer = document.getElementById('moon-container');
 		var moon = [0x1F311,0x1F312,0x1F313,0x1F314,0x1F315,0x1F316,0x1F317,0x1F318];
 
-		var timeSpeed = 0.08;
+		var timeSpeed = 0.01;
 		var noiseSpeed = 0.008;
 		// var moon = ['-','+','=','|','*']
 
@@ -144,11 +144,12 @@
 
 			document.getElementById('ctrl-noisespeed').oninput = function( value ){
 				// console.log( value.srcElement.valueAsNumber );
-
 				noiseSpeed = value.srcElement.valueAsNumber  / 10000.0;
 			}
 
-
+			window.onresize = function(){
+				isDirty = true;
+			}
 
 
 			requestAnimationFrame( update );

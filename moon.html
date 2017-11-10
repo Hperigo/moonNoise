@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+
+	<style>
+	
+		body{
+			background-color: #ca4e4e;
+		}
+
+		.moon{
+			width: 40px;
+			height:40px;
+			float:right;
+
+			font-size: 12pt;
+			color:white;
+		}
+
+		#info{
+			background-color: white;
+			width: 200px;
+			font-family: monospace;
+			padding: 30px;
+			position: fixed;
+			z-index: 2;
+		}
+	</style>
+
+</head>
+<body>
+
+
+	<div id='info'>
+		<p>made with <span id='desc-moon'></span> by <a href='http://hperigo.com.br/' target="blank"> hperigo </a> </p>
+		<input type="range" min="1" max="1000" value="50" class="slider" id="ctrl-timespeed">
+		<input type="range" min="-1000" max="1000" value="50" class="slider" id="ctrl-noisespeed">
+	</div>
+
+	<div id='moon-container'></div>
+
+
+	<script src="./noisejs-master/perlin.js"></script> 
+	<script>
+
+
+		window.onload = function(){
+
+		var time = 0;
+		var noiseTime = 0;
+
+		var moonContainer = document.getElementById('moon-container');
+		var moon = [0x1F311,0x1F312,0x1F313,0x1F314,0x1F315,0x1F316,0x1F317,0x1F318];
+
+		var timeSpeed = 0.08;
+		var noiseSpeed = 0.008;
+		// var moon = ['-','+','=','|','*']
+
+
+
+		var isDirty = true;
+		
+		for(var i = 0; i < 1000; i++){
+
+			var el = document.createElement( "div" );
+			el.setAttribute( 'class', 'moon' );
+
+			var viewportOffset = el.getBoundingClientRect();
+			var top = viewportOffset.top;
+			var left = viewportOffset.left;
+
+			el.setAttribute('x', left);
+			el.setAttribute('y', top);
+
+
+			el.innerHTML = String.fromCodePoint( moon[0] );
+			moonContainer.appendChild( el );
+		}
+
+
+
+		function update(){
+
+			for(var i = 0; i < moonContainer.children.length; i++){
+
+				var el = moonContainer.children[i];
+			
+			
+				if( isDirty ){
+
+					
+					var viewportOffset = el.getBoundingClientRect();
+					var top = viewportOffset.top;
+					var left = viewportOffset.left;
+
+					el.setAttribute('x', left);
+					el.setAttribute('y', top);
+
+				}
+
+
+				
+				var x =  el.getAttribute('x')
+				var y = el.getAttribute('y')
+
+				var mNoise = noise.simplex3(x / 4000.0, y / 8000.0, noiseTime);
+
+				var newIndex =  Math.round( (mNoise + time )  * 0.5 * moon.length ) % moon.length; // Math.round( index + ( x + y ) * 1.0 ) ;
+
+				var m = moon[ newIndex];
+
+				if( m != undefined ){
+					el.innerHTML = String.fromCodePoint( m );
+
+					// var size = (Math.sin( mNoise * 0.7 ) + 1.0 ) * 0.5 
+
+					// el.style.fontSize = ((size * 5) + 10) + 'pt';
+				}
+					// el.innerHTML = m
+
+			}
+
+			var elDesc = document.getElementById('desc-moon');
+
+			var i =   Math.round((time ) % (moon.length - 1));
+			// console.log(i)
+			elDesc.innerHTML = String.fromCodePoint( moon[i] );
+
+			
+			isDirty = false;
+
+			time += timeSpeed;
+			noiseTime += noiseSpeed;
+			requestAnimationFrame( update )
+		}
+
+			document.getElementById('ctrl-timespeed').oninput = function( value ){
+				// console.log( value.srcElement.valueAsNumber );
+
+				timeSpeed = value.srcElement.valueAsNumber / 10000.0;
+			}
+
+
+			document.getElementById('ctrl-noisespeed').oninput = function( value ){
+				// console.log( value.srcElement.valueAsNumber );
+
+				noiseSpeed = value.srcElement.valueAsNumber  / 10000.0;
+			}
+
+
+
+
+			requestAnimationFrame( update );
+
+		}
+
+	</script>
+
+</body>
+</html>
